@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "${RUNNER_DEBUG}" = "1" ] ; then
   set -x
@@ -11,6 +11,8 @@ fi
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
+declare -a RDOG_FLAGS="($INPUT_REVIEWDOG_FLAGS)"
+
 # shellcheck disable=SC2086
 actionlint -oneline ${INPUT_ACTIONLINT_FLAGS} \
     | reviewdog \
@@ -20,7 +22,7 @@ actionlint -oneline ${INPUT_ACTIONLINT_FLAGS} \
         -filter-mode="${INPUT_FILTER_MODE}" \
         -fail-on-error="${INPUT_FAIL_ON_ERROR}" \
         -level="${INPUT_LEVEL}" \
-        ${INPUT_REVIEWDOG_FLAGS}
+        "${RDOG_FLAGS[@]}"
 exit_code=$?
 
 exit $exit_code
